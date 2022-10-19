@@ -4,15 +4,14 @@ using System.Collections;
 public class QLearning{
 
     public static void PrintMatrix(double[,] matrix){
-        for (int i=0; i < matrix.GetLength(0); i++){
-        Console.Write("{");
-        for(int j=0; j < matrix.GetLength(1); j++){
-            Console.Write("{0:F2}", matrix[i,j]);
-            Console.Write(" ");
-            }
-        Console.WriteLine("}");
-        }
+        for (int i=0; i < 6; i++){
+            Console.Write("{ ");
+            Console.Write("{0:f} {1:f} {2:f} {3:f}", 
+                              matrix[i,0], matrix[i,1],matrix[i,2],matrix[i,3]);
+            Console.WriteLine(" }");
+        }    
     }
+
     public static double GetBestAction(double [,] qMatrix, int nextState){
         double qBestAction = 0;
         for(int i=0; i < 4; i++){
@@ -22,8 +21,7 @@ public class QLearning{
             }
         }
         return qBestAction;
-    }
-    
+    } 
     public static void UpdateState(double [,] qMatrix, int state, int nextState, int action, double alpha, double gamma, int[,] rwMatrix){
         double qEstimated = rwMatrix[state,nextState] + gamma * GetBestAction(qMatrix,nextState);
         qMatrix[state,action] = qMatrix[state,action] + alpha*(qEstimated-qMatrix[state,action]);
@@ -55,7 +53,7 @@ public class QLearning{
         //6 linhas representam os estados e 4 representa as 4 açoes
         double [,] qMatrix = new double[6,4]; 
         for(int i=0; i < 4; i++) {
-            qMatrix[5,i] = 1; 
+            qMatrix[5,i] = 10; 
         }
 
         //Cria a Matriz de Recompensa com os valores estabelecidos pela questão
@@ -94,6 +92,8 @@ public class QLearning{
         for(int i=0; i < 14; i++){
             UpdateState(qMatrix, trajectory5[i,0] - 1,trajectory5[i,2] - 1,trajectory5[i,1] - 1,alpha, gamma, rwMatrix);
         }
+        
+        //Imprimindo a Matriz Q resultante das operações e a política
         string [] policy = GetPolicy(qMatrix);
         PrintMatrix(qMatrix);
         Console.WriteLine(policy[4] + " "+ "1");
